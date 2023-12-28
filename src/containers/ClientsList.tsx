@@ -1,89 +1,32 @@
-import React, { useEffect, useState } from 'react'
-import { Avatar, Button, List, Skeleton } from 'antd'
-
-interface DataType {
-  gender?: string;
-  name: {
-    title?: string;
-    first?: string;
-    last?: string;
-  };
-  email?: string;
-  picture: {
-    large?: string;
-    medium?: string;
-    thumbnail?: string;
-  };
-  nat?: string;
-  loading: boolean;
-}
-
-const count = 3
-const fakeDataUrl = `https://randomuser.me/api/?results=${count}&inc=name,gender,email,nat,picture&noinfo`
+import React, { useEffect } from 'react'
+import { Avatar, List, Skeleton } from 'antd'
+import { fetchData } from '@/store/slices/client.slice'
+import { useAppDispatch, useAppSelector } from '@/store/hook'
+import Description from '@/components/client/Description'
 
 const ClientsList: React.FC = () => {
-  const [initLoading, setInitLoading] = useState(true)
-  const [loading, setLoading] = useState(false)
-  const [data, setData] = useState<DataType[]>([])
-  const [list, setList] = useState<DataType[]>([])
+  const dispatch = useAppDispatch()
+  const clients =  useAppSelector(state => state.clientSlice.clients)
+  const loading = useAppSelector(state => state.clientSlice.loading)
 
   useEffect(() => {
-    fetch(fakeDataUrl)
-      .then((res) => res.json())
-      .then((res) => {
-        setInitLoading(false)
-        setData(res.results)
-        setList(res.results)
-      })
-  }, [])
-
-  const onLoadMore = () => {
-    setLoading(true)
-    setList(
-      data.concat([...new Array(count)].map(() => ({ loading: true, name: {}, picture: {} }))),
-    )
-    fetch(fakeDataUrl)
-      .then((res) => res.json())
-      .then((res) => {
-        const newData = data.concat(res.results);
-        setData(newData);
-        setList(newData);
-        setLoading(false);
-        // Resetting window's offsetTop so as to display react-virtualized demo underfloor.
-        // In real scene, you can using public method of react-virtualized:
-        // https://stackoverflow.com/questions/46700726/how-to-use-public-method-updateposition-of-react-virtualized
-        window.dispatchEvent(new Event('resize'));
-      })
-  }
-
-  const loadMore =
-    !initLoading && !loading ? (
-      <div
-        style={{
-          textAlign: 'center',
-          marginTop: 12,
-          height: 32,
-          lineHeight: '32px',
-        }}
-      >
-        <Button onClick={onLoadMore}>loading more</Button>
-      </div>
-    ) : null
+    console.log('asdf')
+    dispatch(fetchData())
+  }, [dispatch])
 
   return (
     <List
       className="demo-loadmore-list"
-      loading={initLoading}
+      loading={loading}
       itemLayout="horizontal"
-      loadMore={loadMore}
-      dataSource={list}
+      dataSource={clients}
       renderItem={(item) => (
         <List.Item>
-          <Skeleton avatar title={false} loading={item.loading} active>
+          <Skeleton avatar title={false} active>
             <List.Item.Meta
-              avatar={<Avatar src={item.picture.large} />}
-              title={<a href="https://ant.design">{item.name?.last}</a>}
-              description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+              avatar={<Avatar src={item.img} />}
+              title={<a href="https://ant.design">{item.client}</a>}
+              description={<Description tvl={item.tvl} loc={item.loc} />}
             />
           </Skeleton>
         </List.Item>
