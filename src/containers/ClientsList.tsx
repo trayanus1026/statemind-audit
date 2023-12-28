@@ -10,7 +10,6 @@ const ClientsList: React.FC = () => {
   const loading = useAppSelector(state => state.clientSlice.loading)
 
   useEffect(() => {
-    console.log('asdf')
     dispatch(fetchData())
   }, [dispatch])
 
@@ -22,9 +21,9 @@ const ClientsList: React.FC = () => {
       dataSource={clients}
       renderItem={(item) => (
         <List.Item>
-          <Skeleton avatar title={false} active>
+          <Skeleton avatar title={false} loading={loading} active>
             <List.Item.Meta
-              avatar={<Avatar src={item.img} />}
+              avatar={<Avatar src={item.img}>{item.img.slice(0, 2)}</Avatar>}
               title={<a href="https://ant.design">{item.client}</a>}
               description={<Description tvl={item.tvl} loc={item.loc} />}
             />

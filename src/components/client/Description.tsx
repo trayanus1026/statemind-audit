@@ -5,13 +5,14 @@ interface IDescription {
   tvl: number
   loc: number
 }
+
 const { Paragraph } = Typography
 
 const Description: React.FC<IDescription> = ({ tvl, loc }) => {
   return (
-    <Flex>
-      <Paragraph>tvl: {tvl}</Paragraph>
-      <Paragraph>loc: {loc}</Paragraph>
+    <Flex gap="small" vertical>
+      <Paragraph style={{ margin: 0 }}>tvl: {tvl}</Paragraph>
+      <Paragraph style={{ margin: 0 }}>loc: {loc}</Paragraph>
     </Flex>
   )
 }

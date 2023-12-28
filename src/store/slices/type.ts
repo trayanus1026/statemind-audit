@@ -3,7 +3,7 @@ interface IClient {
   tvl: number
   img: string
   loc: number
-  audits: []
+  audits: object[]
 }
 
 export interface IClients {
